@@ -397,6 +397,16 @@ pub enum Commands {
         #[arg(short = 'W', long)]
         witness: Option<PathBuf>,
     },
+    /// Generates the Assembly Program
+    #[command(arg_required_else_help = true)]
+    GenerateProgram {
+        /// The path to the .json witness file
+        #[arg(short = 'W', long)]
+        witness: PathBuf,
+        /// The path to the .onnx model file
+        #[arg(short = 'M', long)]
+        model: PathBuf,
+    },
 
     #[cfg(not(target_arch = "wasm32"))]
     /// Fuzzes the proof pipeline with random inputs, random parameters, and random keys

@@ -1054,6 +1054,7 @@ impl Model {
         let input = &vars.advices[0];
         let output = &vars.advices[1];
         let index = &vars.advices[2];
+        println!("Required Lookups: {:?}", required_lookups);
         for op in required_lookups {
             base_gate.configure_lookup(meta, input, output, index, lookup_range, logrows, &op)?;
         }
