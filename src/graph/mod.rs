@@ -1044,7 +1044,6 @@ impl GraphCircuit {
         check_mode: CheckMode,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         let model = Model::from_run_args(&params.run_args, model_path)?;
-        println!("model: {:?}", model);
         Self::new_from_settings(model, params.clone(), check_mode)
     }
 
