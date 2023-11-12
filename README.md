@@ -1,6 +1,6 @@
 # Machine Learning zk-VM Compiler
 
-<img src="logo.png" />
+<img src="logo.png" width="200px"/>
 
 Hackathon project, see [Devfolio submission](https://devfolio.co/projects/machine-learning-zkvm-fdf6).
 
