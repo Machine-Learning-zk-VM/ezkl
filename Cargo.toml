@@ -14,11 +14,9 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 csv = "1.3.0"
-#halo2_gadgets = { git = "https://github.com/zkonduit/halo2", branch= "ac/optional-unblinded-advice" }
-#halo2_proofs = { git = "https://github.com/zkonduit/halo2", branch= "ac/optional-unblinded-advice" }
+halo2_gadgets = { git = "https://github.com/Machine-Learning-zk-VM/halo2", branch = "ac/optional-unblinded-advice-public" }
+halo2_proofs = { git = "https://github.com/Machine-Learning-zk-VM/halo2", branch = "ac/optional-unblinded-advice-public" }
 
-halo2_gadgets = { path = "../zkonduit-halo2/halo2_gadgets/" }
-halo2_proofs = { path = "../zkonduit-halo2/halo2_proofs/" }
 halo2curves = { version = "0.1.0" }
 rand = { version = "0.8", default_features = false }
 itertools = { version = "0.10.3", default_features = false }
@@ -198,5 +196,5 @@ ezkl = [
 det-prove = []
 
 [patch."https://github.com/zkonduit/halo2"]
-halo2_gadgets = { path = "../zkonduit-halo2/halo2_gadgets/" }
-halo2_proofs = { path = "../zkonduit-halo2/halo2_proofs/" }
+halo2_gadgets = { git = "https://github.com/Machine-Learning-zk-VM/halo2", branch = "ac/optional-unblinded-advice-public" }
+halo2_proofs = { git = "https://github.com/Machine-Learning-zk-VM/halo2", branch = "ac/optional-unblinded-advice-public" }

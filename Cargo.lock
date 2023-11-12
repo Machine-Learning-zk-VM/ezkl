@@ -2087,6 +2087,7 @@ dependencies = [
 [[package]]
 name = "halo2_gadgets"
 version = "0.2.0"
+source = "git+https://github.com/Machine-Learning-zk-VM/halo2?branch=ac/optional-unblinded-advice-public#44dd4e82cd679cb1cc737b8836aca310cf592139"
 dependencies = [
  "arrayvec 0.7.4",
  "bitvec 1.0.1",
@@ -2103,6 +2104,7 @@ dependencies = [
 [[package]]
 name = "halo2_proofs"
 version = "0.2.0"
+source = "git+https://github.com/Machine-Learning-zk-VM/halo2?branch=ac/optional-unblinded-advice-public#44dd4e82cd679cb1cc737b8836aca310cf592139"
 dependencies = [
  "blake2b_simd",
  "env_logger",
