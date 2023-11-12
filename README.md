@@ -2,7 +2,7 @@
 
 <img src="logo.png" width="200px"/>
 
-Hackathon project, see [Devfolio submission](https://devfolio.co/projects/machine-learning-zkvm-fdf6).
+Hackathon project, see [Devfolio submission](https://devfolio.co/projects/machine-learning-zkvm-fdf6) and [this presentation](https://docs.google.com/presentation/d/11AauxQ1tfuM5U18hWUpqz-ph3awOmvonee1DjoijYF0/edit?usp=sharing).
 
 ## Setup
 
