@@ -1351,7 +1351,6 @@ pub(crate) fn generate_program(
         "div_128", "relu",
     ];
     let mut mem = vec![];
-    //let mut mem = BTreeMap::new();
     let mut rep_to_addr = BTreeMap::new();
 
     let mut get_addr = |arg: &Arg| {
@@ -1380,7 +1379,6 @@ pub(crate) fn generate_program(
 
     let mut file = File::create("program.asm").unwrap();
 
-    let mut last_stored_address = 12345;
     for row in 0..selectors[0].len() {
         let active_gates = selectors.iter().positions(|x| x[row]).collect::<Vec<_>>();
         assert!(active_gates.len() <= 1);
@@ -1388,60 +1386,62 @@ pub(crate) fn generate_program(
             let active_gate = active_gates[0];
             let name = names[active_gate];
 
-            writeln!(file, "// Row {}: {}", row, name,).unwrap();
-
             match name {
                 "add" => {
-                    writeln!(file, "a <== mload({});", get_addr(&args[0][row])).unwrap();
-                    writeln!(file, "b <== mload({});", get_addr(&args[1][row])).unwrap();
-                    writeln!(file, "m <== add();").unwrap();
-                    
-                    last_stored_address = get_addr(&args[2][row]);
-                    writeln!(file, "mstore({});", last_stored_address).unwrap();
+                    writeln!(
+                        file,
+                        "add {}, {}, {};",
+                        get_addr(&args[0][row]),
+                        get_addr(&args[1][row]),
+                        get_addr(&args[2][row])
+                    )
+                    .unwrap();
                 }
                 "sub" => todo!(),
                 "dot" => {
-                    writeln!(file, "a <== mload({});", get_addr(&args[0][row])).unwrap();
-                    writeln!(file, "b <== mload({});", get_addr(&args[1][row])).unwrap();
-                    let addr = get_addr(&args[2][row - 1]);
-                    // Performance optimization!
-                    // If we just stored the value from m to this address, we don't have to load it again!
-                    // This is a very common pattern to compute dot products of large vectors.
-                    if addr != last_stored_address {
-                        writeln!(file, "m <== mload({});", get_addr(&args[2][row - 1])).unwrap();
-                    }
-                    writeln!(file, "m <== dot();").unwrap();
-
-                    last_stored_address = get_addr(&args[2][row]);
-                    writeln!(file, "mstore({});", last_stored_address).unwrap();
+                    writeln!(
+                        file,
+                        "dot {}, {}, {}, {};",
+                        get_addr(&args[0][row]),
+                        get_addr(&args[1][row]),
+                        get_addr(&args[2][row - 1]),
+                        get_addr(&args[2][row]),
+                    )
+                    .unwrap();
                 }
                 "cumprod" => todo!(),
                 "sum" => todo!(),
                 "neg" => todo!(),
                 "mult" => {
-                    writeln!(file, "a <== mload({});", get_addr(&args[0][row])).unwrap();
-                    writeln!(file, "b <== mload({});", get_addr(&args[1][row])).unwrap();
-                    writeln!(file, "m <== mult();").unwrap();
-
-                    last_stored_address = get_addr(&args[2][row]);
-                    writeln!(file, "mstore({});", last_stored_address).unwrap();
+                    writeln!(
+                        file,
+                        "mult {}, {}, {};",
+                        get_addr(&args[0][row]),
+                        get_addr(&args[1][row]),
+                        get_addr(&args[2][row])
+                    )
+                    .unwrap();
                 }
                 "iszero" => todo!(),
                 "identity" => todo!(),
                 "isbool" => todo!(),
                 "div_128" => {
-                    writeln!(file, "a <== mload({});", get_addr(&args[0][row])).unwrap();
-                    writeln!(file, "m <== div_128();").unwrap();
-
-                    last_stored_address = get_addr(&args[1][row]);
-                    writeln!(file, "mstore({});", last_stored_address).unwrap();
+                    writeln!(
+                        file,
+                        "div_128 {}, {};",
+                        get_addr(&args[0][row]),
+                        get_addr(&args[1][row]),
+                    )
+                    .unwrap();
                 }
                 "relu" => {
-                    writeln!(file, "a <== mload({});", get_addr(&args[0][row])).unwrap();
-                    writeln!(file, "m <== relu();").unwrap();
-
-                    last_stored_address = get_addr(&args[1][row]);
-                    writeln!(file, "mstore({});", last_stored_address).unwrap();
+                    writeln!(
+                        file,
+                        "relu {}, {};",
+                        get_addr(&args[0][row]),
+                        get_addr(&args[1][row]),
+                    )
+                    .unwrap();
                 }
                 &_ => panic!(),
             };
