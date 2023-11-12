@@ -1,5 +1,9 @@
 # Machine Learning zk-VM Compiler
 
+<img src="logo.png" />
+
+Hackathon project, see [Devfolio submission](https://devfolio.co/projects/machine-learning-zkvm-fdf6).
+
 ## Setup
 
 Install [Powdr](https://www.powdr.org/):
