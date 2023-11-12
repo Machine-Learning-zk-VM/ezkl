@@ -248,7 +248,7 @@ pub(crate) fn generate_program(
         format!("{}{}", if neg { "-" } else { "" }, x)
     };
 
-    for (i, v) in mem.iter().enumerate() {
+    for v in mem.iter() {
         writeln!(file, "{}", to_str(*v)).unwrap();
     }
     for _ in mem.len()..65536 {

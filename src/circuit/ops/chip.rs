@@ -228,14 +228,6 @@ impl<F: PrimeField + TensorType + PartialOrd> BaseConfig<F> {
 
         for ((base_op, block_idx, inner_col_idx), selector) in selectors.iter() {
             meta.create_gate(base_op.as_str(), |meta| {
-                match base_op {
-                    BaseOp::Dot => {
-                        println!("Foo");
-                        println!("Bar");
-                    }
-                    _ => {}
-                }
-
                 let selector = meta.query_selector(*selector);
                 let mut qis = vec![Expression::<F>::zero().unwrap(); 2];
                 for (i, q_i) in qis

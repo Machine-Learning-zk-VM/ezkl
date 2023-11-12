@@ -163,10 +163,6 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
     let output_eq = equation.next().unwrap();
     let inputs_eq = inputs_eq.split(',').collect::<Vec<_>>();
 
-    println!("equation: {:?}", equation);
-    println!("inputs_eq: {:?}", inputs_eq);
-    println!("output_eq: {:?}", output_eq);
-
     // Check that the number of inputs matches the number of inputs in the equation
     if inputs.len() != inputs_eq.len() {
         return Err(Box::new(TensorError::DimMismatch("einsum".to_string())));
@@ -188,8 +184,6 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
     for c in output_eq.chars() {
         indices_to_size.entry(c).or_insert(1);
     }
-
-    println!("indices_to_size: {:?}", indices_to_size);
 
     // Compute the output tensor shape
     let mut output_shape: Vec<usize> = output_eq
@@ -216,14 +210,10 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
         }
     }
 
-    println!("common_indices_to_inputs: {:?}", common_indices_to_inputs);
-
     let non_common_indices = indices_to_size
         .keys()
         .filter(|&x| !common_indices_to_inputs.contains(x))
         .collect::<Vec<_>>();
-
-    println!("non_common_indices: {:?}", non_common_indices);
 
     let non_common_coord_size = non_common_indices
         .iter()
@@ -238,15 +228,11 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
         })
         .product::<usize>();
 
-    println!("non_common_coord_size: {:?}", non_common_coord_size);
-
     let cartesian_coord = output_shape
         .iter()
         .map(|d| 0..*d)
         .multi_cartesian_product()
         .collect::<Vec<_>>();
-
-    println!("cartesian_coord: {:?}", cartesian_coord);
 
     // Get the indices common accross input tensors
     let mut common_coord = common_indices_to_inputs
@@ -267,7 +253,6 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
     if common_coord.is_empty() {
         common_coord.push(vec![]);
     }
-    println!("common_coord: {:?}", common_coord);
 
     let inner_loop_function = |i: usize, region: &mut RegionCtx<'_, F>| -> ValType<F> {
         let coord = cartesian_coord[i].clone();
@@ -355,7 +340,6 @@ pub fn einsum<F: PrimeField + TensorType + PartialOrd>(
 
     if !region.is_dummy() {
         output.iter_mut().enumerate().for_each(|(i, o)| {
-            println!("Running inner loop function for index {}", i);
             *o = inner_loop_function(i, region);
         });
     } else {

@@ -21,12 +21,10 @@ use crate::pfsys::{
 use crate::pfsys::{create_proof_circuit_kzg, verify_proof_circuit_kzg};
 use crate::pfsys::{save_vk, srs::*};
 use crate::RunArgs;
-use csv::Writer;
 #[cfg(not(target_arch = "wasm32"))]
 use ethers::types::H160;
 use gag::Gag;
-use halo2_proofs::dev::{CellValue, InstanceValue, MockProver, VerifyFailure};
-use halo2_proofs::plonk::{Advice, Column};
+use halo2_proofs::dev::VerifyFailure;
 use halo2_proofs::poly::commitment::Params;
 use halo2_proofs::poly::commitment::ParamsProver;
 use halo2_proofs::poly::kzg::commitment::KZGCommitmentScheme;
@@ -53,9 +51,7 @@ use plotters::prelude::*;
 use rand::Rng;
 #[cfg(not(target_arch = "wasm32"))]
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::error::Error;
-use std::fmt::{Display, Formatter};
 use std::fs::File;
 #[cfg(not(target_arch = "wasm32"))]
 use std::io::ErrorKind::NotFound;
@@ -1197,7 +1193,6 @@ pub(crate) fn compile_circuit(
 ) -> Result<(), Box<dyn Error>> {
     let settings = GraphSettings::load(&settings_path)?;
     let circuit = GraphCircuit::from_settings(&settings, &model_path, CheckMode::UNSAFE)?;
-    println!("Compiled circuit: {:?}", circuit);
     circuit.save(compiled_circuit)?;
     Ok(())
 }
