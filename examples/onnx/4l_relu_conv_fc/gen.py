@@ -22,7 +22,6 @@ class MyModel(nn.Module):
 
         # flatten => 32 x (32*26*26)
         x = x.flatten(start_dim = 1)
-    #    x = x.flatten()
 
         # 32 x (32*26*26) => 32x128
         x = self.d1(x)

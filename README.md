@@ -8,7 +8,7 @@ git clone git@github.com:powdr-labs/powdr.git
 cd powdr
 # write-once-memory branch needed for this project
 git checkout write-once-memory
-cargo install --path powdr_cli
+cargo install --path powdr_cli --features halo2
 ```
 
 ## Compiling a VM
@@ -19,7 +19,7 @@ Go inside a directory with a `network.onnx` & `input.json`, for example:
 
 Run the following EZKL steps to prepare the network:
 ```bash
-cargo run gen-settings -M network.onnx --param-visibility public --input-visibility private --output-visibility private
+cargo run gen-settings -M network.onnx --param-visibility public --input-visibility private --output-visibility private --logrows 16
 cargo run compile-circuit -M network.onnx -S settings.json --compiled-circuit network.ezkl
 cargo run gen-witness -M network.ezkl -D input.json
 ```
@@ -34,8 +34,20 @@ This will generate 2 files:
 - `memory.csv`: The content of the memory, specific to the input (from `input.json`)
 
 These can be passed to Powdr to compile the VM and make a prove of the program:
-```
+```bash
 powdr pil vm.asm -f --witness-values memory.csv --prove-with estark
 ```
 
 (or without the `--prove-with estark` flag if you just want to check everything works)
+
+For a better comparison with EZKL, you can also create the proof with the Halo2 backend:
+```bash
+powdr pil vm.asm -f --witness-values memory.csv --prove-with halo2 --field bn254
+```
+
+For comparison, to benchmark EZKL:
+```bash
+cargo run -r get-srs --logrows=16 --srs-path=16.srs
+cargo run -r setup -M network.ezkl --srs-path=16.srs
+time cargo run -r prove -M network.ezkl --witness witness.json --pk-path=pk.key --proof-path=model.proof --srs-path=16.srs
+```
