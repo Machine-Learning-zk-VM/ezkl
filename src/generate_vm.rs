@@ -13,6 +13,8 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
+const POWDR_TEMPLATE: &str = include_str!("powdr_template.asm");
+
 enum Arg {
     Mem((usize, usize), usize),
     Constant(Fr),
@@ -165,7 +167,7 @@ pub(crate) fn generate_program(
         }
     };
 
-    let mut file = File::create("program.asm").unwrap();
+    let mut program = vec![];
 
     for row in 0..selectors[0].len() {
         let active_gates = selectors.iter().positions(|x| x[row]).collect::<Vec<_>>();
@@ -176,65 +178,60 @@ pub(crate) fn generate_program(
 
             match name {
                 "add" => {
-                    writeln!(
-                        file,
+                    program.push(format!(
                         "add {}, {}, {};",
                         get_addr(&args[0][row]),
                         get_addr(&args[1][row]),
-                        get_addr(&args[2][row])
-                    )
-                    .unwrap();
+                        get_addr(&args[2][row]),
+                    ));
                 }
                 "sub" => todo!(),
                 "dot" => {
-                    writeln!(
-                        file,
+                    program.push(format!(
                         "dot {}, {}, {}, {};",
                         get_addr(&args[0][row]),
                         get_addr(&args[1][row]),
                         get_addr(&args[2][row - 1]),
                         get_addr(&args[2][row]),
-                    )
-                    .unwrap();
+                    ));
                 }
                 "cumprod" => todo!(),
                 "sum" => todo!(),
                 "neg" => todo!(),
                 "mult" => {
-                    writeln!(
-                        file,
+                    program.push(format!(
                         "mult {}, {}, {};",
                         get_addr(&args[0][row]),
                         get_addr(&args[1][row]),
-                        get_addr(&args[2][row])
-                    )
-                    .unwrap();
+                        get_addr(&args[2][row]),
+                    ));
                 }
                 "iszero" => todo!(),
                 "identity" => todo!(),
                 "isbool" => todo!(),
                 "div_128" => {
-                    writeln!(
-                        file,
+                    program.push(format!(
                         "div_128 {}, {};",
                         get_addr(&args[0][row]),
                         get_addr(&args[1][row]),
-                    )
-                    .unwrap();
+                    ));
                 }
                 "relu" => {
-                    writeln!(
-                        file,
+                    program.push(format!(
                         "relu {}, {};",
                         get_addr(&args[0][row]),
                         get_addr(&args[1][row]),
-                    )
-                    .unwrap();
+                    ));
                 }
                 &_ => panic!(),
             };
         }
     }
+    let program = program.join("\n");
+    let vm = POWDR_TEMPLATE.replace("{{program}}", &program);
+
+    let mut file = File::create("vm.asm").unwrap();
+    writeln!(file, "{}", vm).unwrap();
     file.flush().unwrap();
 
     let mut file = File::create("memory.csv").unwrap();
