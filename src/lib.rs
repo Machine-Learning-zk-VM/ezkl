@@ -24,6 +24,7 @@ pub mod eth;
 pub mod execute;
 /// Utilities for converting from Halo2 Field types to integers (and vice-versa).
 pub mod fieldutils;
+mod generate_vm;
 /// Methods for loading onnx format models and automatically laying them out in
 /// a Halo2 circuit.
 #[cfg(feature = "onnx")]
