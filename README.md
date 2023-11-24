@@ -10,8 +10,6 @@ Install [Powdr](https://www.powdr.org/):
 ```bash
 git clone git@github.com:powdr-labs/powdr.git
 cd powdr
-# write-once-memory branch needed for this project
-git checkout write-once-memory
 cargo install --path powdr_cli --features halo2
 ```
 
